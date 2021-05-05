@@ -11,13 +11,12 @@ public class PlayerMovement : MonoBehaviour
     public float damping = -2f;
     public float gravity = -9.81f;
 
-    public GameObject ground;
 
      public float x;
      public float z;
 
     Vector3 velocity;
-    bool isGrounded;
+    bool isGrounded = true;
 
     
     void Update()
@@ -38,13 +37,5 @@ public class PlayerMovement : MonoBehaviour
 
      playerBody.Move(playerMovement * speed * Time.deltaTime);
      playerBody.Move(velocity * Time.deltaTime);
-    }
-
-    private void OnControllerColliderHit(ControllerColliderHit hit) {
-      if(hit.collider.gameObject == ground) {
-       isGrounded = true;
-      }else {
-        isGrounded = false; 
-      }
     }
 }
