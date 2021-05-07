@@ -1,10 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    public CharacterController playerBody;
+ public CharacterController playerBody;
     public float jumpHeight = 3f;
     public float speed = 6f;
 
@@ -15,26 +15,54 @@ public class PlayerMovement : MonoBehaviour
      public float x;
      public float z;
 
-    Vector3 velocity;
-    bool isGrounded = true;
-
+    private Vector3 velocity;
+    const bool IsGrounded = true;
     
-    void Update()
+    private InputMaster _controls;
+
+    private void Awake()
     {
-     if(isGrounded && velocity.y < 0){
-       velocity.y = -2f;  
+     _controls = new InputMaster();
+     _controls.Axis.Horizontal.performed += ctx => Variables(ctx.ReadValue<float>(),x);
+     _controls.Axis.Vertical.performed += ctx => Variables(ctx.ReadValue<float>(),z);
+    }
+
+    #region InputSystemStup
+    private static void Variables(float toGetVariable , float toSetVariable)
+    {
+     toSetVariable = toGetVariable;
+    }
+
+    private void OnEnable()
+    {
+     _controls.Enable();
+    }
+    private void OnDisable()
+    {
+     _controls.Disable();
+    }
+    
+
+    #endregion
+    
+
+
+
+
+    private void Update()
+    {
+     if (IsGrounded && velocity.y < 0)
+     {
+      velocity.y = -2f;
      }
-         
-     x = Input.GetAxis("Horizontal");
-     z = Input.GetAxis("Vertical");
 
-     if(Input.GetKeyDown(KeyCode.Space) && isGrounded){
-      velocity.y = Mathf.Sqrt(jumpHeight * damping * gravity);
-     } 
-
+     // if(Input.GetKeyDown(KeyCode.Space) && IsGrounded){
+     //  velocity.y = Mathf.Sqrt(jumpHeight * damping * gravity);
+     // } 
+    
      Vector3 playerMovement = (transform.right * x) + (transform.forward * z);
      velocity.y += gravity * Time.deltaTime;
-
+    
      playerBody.Move(playerMovement * speed * Time.deltaTime);
      playerBody.Move(velocity * Time.deltaTime);
     }
