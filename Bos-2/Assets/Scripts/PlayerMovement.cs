@@ -1,38 +1,32 @@
 ﻿
+using System;
 using UnityEngine;
+using UnityEngine.Assertions.Comparers;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
- public CharacterController playerBody;
-    public float jumpHeight = 3f;
-    public float speed = 6f;
-
-    public float damping = -2f;
-    public float gravity = -9.81f;
-
-
-     public float x;
-     public float z;
-
-    private Vector3 velocity;
-    const bool IsGrounded = true;
+    private float _x;
+    private float _z;
+    private Vector3 _movement;
     
     private InputMaster _controls;
+    private CharacterController _player;
 
+    public float speed = 3f;
     private void Awake()
     {
      _controls = new InputMaster();
-     _controls.Axis.Horizontal.performed += ctx => Variables(ctx.ReadValue<float>(),x);
-     _controls.Axis.Vertical.performed += ctx => Variables(ctx.ReadValue<float>(),z);
+     _controls.Axis.Horizontal.performed += ctx => _x = ctx.ReadValue<float>();
+     _controls.Axis.Vertical.performed += ctx => _z = ctx.ReadValue<float>();
     }
 
-    #region InputSystemStup
-    private static void Variables(float toGetVariable , float toSetVariable)
+    private void Start()
     {
-     toSetVariable = toGetVariable;
+     _player = GetComponent<CharacterController>();
     }
 
+    #region InputSystemSetup
     private void OnEnable()
     {
      _controls.Enable();
@@ -44,26 +38,10 @@ public class PlayerMovement : MonoBehaviour
     
 
     #endregion
-    
-
-
-
 
     private void Update()
     {
-     if (IsGrounded && velocity.y < 0)
-     {
-      velocity.y = -2f;
-     }
-
-     // if(Input.GetKeyDown(KeyCode.Space) && IsGrounded){
-     //  velocity.y = Mathf.Sqrt(jumpHeight * damping * gravity);
-     // } 
-    
-     Vector3 playerMovement = (transform.right * x) + (transform.forward * z);
-     velocity.y += gravity * Time.deltaTime;
-    
-     playerBody.Move(playerMovement * speed * Time.deltaTime);
-     playerBody.Move(velocity * Time.deltaTime);
+     _movement = transform.right * _x + transform.forward * _z;
+     _player.Move(_movement * speed * Time.deltaTime);
     }
 }

@@ -33,6 +33,22 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""MouseX"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""17273dbd-37cf-4733-ba9c-e6100c5f25cc"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""MouseY"",
+                    ""type"": ""PassThrough"",
+                    ""id"": ""d8a18327-8da5-47ad-b752-0669da9179fe"",
+                    ""expectedControlType"": ""Axis"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -145,6 +161,28 @@ public class @InputMaster : IInputActionCollection, IDisposable
                     ""action"": ""Vertical"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2d4f07cd-3207-44c3-b28f-c33aefde186f"",
+                    ""path"": ""<Mouse>/delta/x"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""MouseX"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""77afaa12-887b-4faa-81f5-63e0ff6a79af"",
+                    ""path"": ""<Mouse>/delta/y"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Controller"",
+                    ""action"": ""MouseY"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -172,6 +210,8 @@ public class @InputMaster : IInputActionCollection, IDisposable
         m_Axis = asset.FindActionMap("Axis", throwIfNotFound: true);
         m_Axis_Horizontal = m_Axis.FindAction("Horizontal", throwIfNotFound: true);
         m_Axis_Vertical = m_Axis.FindAction("Vertical", throwIfNotFound: true);
+        m_Axis_MouseX = m_Axis.FindAction("MouseX", throwIfNotFound: true);
+        m_Axis_MouseY = m_Axis.FindAction("MouseY", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -223,12 +263,16 @@ public class @InputMaster : IInputActionCollection, IDisposable
     private IAxisActions m_AxisActionsCallbackInterface;
     private readonly InputAction m_Axis_Horizontal;
     private readonly InputAction m_Axis_Vertical;
+    private readonly InputAction m_Axis_MouseX;
+    private readonly InputAction m_Axis_MouseY;
     public struct AxisActions
     {
         private @InputMaster m_Wrapper;
         public AxisActions(@InputMaster wrapper) { m_Wrapper = wrapper; }
         public InputAction @Horizontal => m_Wrapper.m_Axis_Horizontal;
         public InputAction @Vertical => m_Wrapper.m_Axis_Vertical;
+        public InputAction @MouseX => m_Wrapper.m_Axis_MouseX;
+        public InputAction @MouseY => m_Wrapper.m_Axis_MouseY;
         public InputActionMap Get() { return m_Wrapper.m_Axis; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -244,6 +288,12 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @Vertical.started -= m_Wrapper.m_AxisActionsCallbackInterface.OnVertical;
                 @Vertical.performed -= m_Wrapper.m_AxisActionsCallbackInterface.OnVertical;
                 @Vertical.canceled -= m_Wrapper.m_AxisActionsCallbackInterface.OnVertical;
+                @MouseX.started -= m_Wrapper.m_AxisActionsCallbackInterface.OnMouseX;
+                @MouseX.performed -= m_Wrapper.m_AxisActionsCallbackInterface.OnMouseX;
+                @MouseX.canceled -= m_Wrapper.m_AxisActionsCallbackInterface.OnMouseX;
+                @MouseY.started -= m_Wrapper.m_AxisActionsCallbackInterface.OnMouseY;
+                @MouseY.performed -= m_Wrapper.m_AxisActionsCallbackInterface.OnMouseY;
+                @MouseY.canceled -= m_Wrapper.m_AxisActionsCallbackInterface.OnMouseY;
             }
             m_Wrapper.m_AxisActionsCallbackInterface = instance;
             if (instance != null)
@@ -254,6 +304,12 @@ public class @InputMaster : IInputActionCollection, IDisposable
                 @Vertical.started += instance.OnVertical;
                 @Vertical.performed += instance.OnVertical;
                 @Vertical.canceled += instance.OnVertical;
+                @MouseX.started += instance.OnMouseX;
+                @MouseX.performed += instance.OnMouseX;
+                @MouseX.canceled += instance.OnMouseX;
+                @MouseY.started += instance.OnMouseY;
+                @MouseY.performed += instance.OnMouseY;
+                @MouseY.canceled += instance.OnMouseY;
             }
         }
     }
@@ -271,5 +327,7 @@ public class @InputMaster : IInputActionCollection, IDisposable
     {
         void OnHorizontal(InputAction.CallbackContext context);
         void OnVertical(InputAction.CallbackContext context);
+        void OnMouseX(InputAction.CallbackContext context);
+        void OnMouseY(InputAction.CallbackContext context);
     }
 }

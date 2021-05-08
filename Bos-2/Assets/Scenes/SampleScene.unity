@@ -525,13 +525,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b4e1505dcbba964aa8f750cf8f45015, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerBody: {fileID: 80105257}
-  jumpHeight: 3
-  speed: 6
-  damping: -2
-  gravity: -9.81
-  x: 0
-  z: 0
 --- !u!143 &80105257
 CharacterController:
   m_ObjectHideFlags: 0
@@ -3542,6 +3535,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ed4a412987e29b4ea9e8b9353a970b6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  mouseSensivity: 15
+  playerBody: {fileID: 0}
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5833,7 +5828,8 @@ PrefabInstance:
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6138148494413493249, guid: d407c65601cf2d047ae01ce46e128a11, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: d407c65601cf2d047ae01ce46e128a11, type: 3}
 --- !u!1001 &1700899338
 PrefabInstance:
