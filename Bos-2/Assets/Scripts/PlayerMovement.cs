@@ -1,47 +1,46 @@
-﻿
-using System;
-using UnityEngine;
-using UnityEngine.Assertions.Comparers;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private float _x;
-    private float _z;
-    private Vector3 _movement;
+    private Vector3 _groundMovement;
+    private Vector3 _verticalMovement;
+    private Vector2 _movementInput;
+
+    public float gravity = 9.81f;
+    private bool _isGrounded;
+    private LayerMask _ground;
     
-    private InputMaster _controls;
+
     private CharacterController _player;
 
+    
+
     public float speed = 3f;
-    private void Awake()
-    {
-     _controls = new InputMaster();
-     _controls.Axis.Horizontal.performed += ctx => _x = ctx.ReadValue<float>();
-     _controls.Axis.Vertical.performed += ctx => _z = ctx.ReadValue<float>();
-    }
 
     private void Start()
-    {
+    { _ground =  LayerMask.GetMask("Ground");
      _player = GetComponent<CharacterController>();
     }
 
-    #region InputSystemSetup
-    private void OnEnable()
+
+    public void ReceiveInput(Vector2 input)
     {
-     _controls.Enable();
-    }
-    private void OnDisable()
-    {
-     _controls.Disable();
+        _movementInput = input;
+
     }
     
-
-    #endregion
-
     private void Update()
     {
-     _movement = transform.right * _x + transform.forward * _z;
-     _player.Move(_movement * speed * Time.deltaTime);
+        _isGrounded = UnityEngine.Physics.CheckSphere(transform.position, 1f, _ground);   
+        
+     _groundMovement = (transform.right * _movementInput.x + transform.forward * _movementInput.y) * speed;
+     _player.Move(_groundMovement * Time.deltaTime);
+
+     _verticalMovement.y += -gravity * Time.deltaTime; 
+  
+     
+     if (_isGrounded == true){ _verticalMovement.y = 0f; }
+     _player.Move(_verticalMovement);
     }
 }
